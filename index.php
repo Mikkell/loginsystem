@@ -1,6 +1,6 @@
 <?php include("header.php"); ?>
 
-<form id="login" action="" method="post" accept-charset="utf-8">
+<form id="login" action="login.php" method="post" accept-charset="utf-8">
     <fieldset>
         <legend>Loginform</legend>
         <input type="hidden" name="submitted" id="submitted" value="1"/>
