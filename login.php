@@ -4,7 +4,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>login.php</title>
 <style>
-/* let's use a little bit decoration :) */
 a{
     text-decoration:none;
     color:black;
