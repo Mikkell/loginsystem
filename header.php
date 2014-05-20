@@ -5,4 +5,7 @@
         <title>loginsystem</title>
         <link rel="stylesheet" href="css/style.css">
     </head>
-    <body>	
+    <body>
+    	<header>
+    		<div id="headercontent"></div>
+    	</header>
