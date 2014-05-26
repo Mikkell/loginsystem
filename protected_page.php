@@ -8,22 +8,19 @@ sec_session_start();
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Secure Login: Protected Page</title>
-        <link rel="stylesheet" href="styles/main.css" />
+        <title>Loginsystem</title>
+        <link rel="stylesheet" href="css/style.css" />
     </head>
     <body>
         <?php if (login_check($mysqli) == true) : ?>
-            <p>Welcome <?php echo htmlentities($_SESSION['username']); ?>!</p>
+            <p>Velkommen <?php echo htmlentities($_SESSION['brugernavn']); ?>!</p>
             <p>
-                This is an example protected page.  To access this page, users
-                must be logged in.  At some stage, we'll also check the role of
-                the user, so pages will be able to determine the type of user
-                authorised to access the page.
+                Dette er et eksempel på en sikker side, som kun kan ses, når brugeren er logget ind i systemet.
             </p>
-            <p>Return to <a href="index.php">login page</a></p>
+            <p>Tilbage til <a href="index.php">loginsiden</a></p>
         <?php else : ?>
             <p>
-                <span class="error">You are not authorized to access this page.</span> Please <a href="index.php">login</a>.
+                <span class="error">Du er ikke autoriseret til at se denne side.</span> Venligst <a href="index.php">login</a>.
             </p>
         <?php endif; ?>
     </body>
