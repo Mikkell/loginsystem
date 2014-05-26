@@ -74,8 +74,8 @@ function checkbrute($bruger_id, $mysqli) {
 	//tidsstempel
 	$now = time();
 
-	//login-forsøg fra seneste to timer bliver talt med.
-	$valid_attempts = $now - (2*60*60);
+	//login-forsøg fra seneste tre timer bliver talt med.
+	$valid_attempts = $now - (3*60*60);
 
 	if ($stmt = $mysqli->prepare("SELECT time FROM login_forsøg WHERE bruger_id = ? AND time > '$valid attempts'")) {
 		$stmt->bind_param('i', $bruger_id);
@@ -84,11 +84,54 @@ function checkbrute($bruger_id, $mysqli) {
 		$stmt->execute();
 		$stmt->store_result();
 
-		//hvis der har været mere end 5 forkerte login forsøg.
-		if ($stmt->num_rows > 5) {
+		//hvis der har været mere end 3 forkerte login forsøg.
+		if ($stmt->num_rows > 3) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+}
+
+function login_check($mysqli) {
+	//tjek om session variabler er klar.
+	if (isset($_SESSION['bruger_id'], $_SESSION['brugernavn'], $_SESSION['login_string'])) {
+		$bruger_id = $_SESSION['bruger_id'];
+		$login_string = $_SESSION['login_string'];
+		$brugernavn = $_SESSION['brugernavn'];
+
+		//Hent bruger-id fra brugeren.
+		$user_browser = $_SERVER['HTTP_USER_AGENT'];
+
+		if ($stmt = $mysqli->prepare("SELECT kode FROM brugere WHERE id = ? LIMIT 1")) {
+			//bind bruger_id til parameter.
+			$stmt->bind_param('i', $bruger_id);
+			$stmt->execute();
+			$stmt->store_result();
+
+			if ($stmt->num_rows == 1) {
+				//hvis brugeren eksisterer, hent resultater fra variabler.
+				$stmt->bind_result($kode);
+				$stmt->fetch();
+				$login_check = hash('sha512', $kode . $user_browser);
+
+				if ($login_check == $login_string) {
+					//logget på.
+					return true;
+				} else {
+					//ikke logget på.
+					return false;
+				}
+			} else {
+				//ikke logget på.
+				return false;
+			}
+		} else {
+			//ikke logget på.
+			return false;
+		}
+	} else {
+		//ikke logget på.
+		return false;
 	}
 }
