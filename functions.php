@@ -40,7 +40,7 @@ function login($email, $password, $mysqli) {
 		if (stmt->num_rows == 1) {
 			//hvis brugeren eksisterer, tjekker vi efter om kontoen er låst pga. for mange forsøg
 
-			if (checkbrute($user_id, $mysqli) == true) {
+			if (checkbrute($bruger_id, $mysqli) == true) {
 				//kontoen er låst. - send email til bruger.
 				return false;
 			} else {
@@ -50,7 +50,7 @@ function login($email, $password, $mysqli) {
 					$user_browser = $_SERVER['HTTP_USER_AGENT'];
 					//XSS beskyttelse.
 					$user_id = preg_replace("/[^0-9]+/", "", $user_id);
-					$_SESSION['user_id'] = $user_id;
+					$_SESSION['bruger_id'] = $bruger_id;
 					$username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
 					$_SESSION['username'] = $username;
 					$_SESSION['login_string'] = hash('sha512', $password . $user_browser);
@@ -65,6 +65,29 @@ function login($email, $password, $mysqli) {
 			}
 		} else {
 			//brugeren findes ikke.
+			return false;
+		}
+	}
+}
+
+function checkbrute($bruger_id, $mysqli) {
+	//tidsstempel
+	$now = time();
+
+	//login-forsøg fra seneste to timer bliver talt med.
+	$valid_attempts = $now - (2*60*60);
+
+	if ($stmt = $mysqli->prepare("SELECT time FROM login_forsøg WHERE bruger_id = ? AND time > '$valid attempts'")) {
+		$stmt->bind_param('i', $bruger_id);
+
+		//kør query
+		$stmt->execute();
+		$stmt->store_result();
+
+		//hvis der har været mere end 5 forkerte login forsøg.
+		if ($stmt->num_rows > 5) {
+			return true;
+		} else {
 			return false;
 		}
 	}
