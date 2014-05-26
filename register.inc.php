@@ -1,6 +1,6 @@
 <?php
 include_once 'db_connect.php';
-include_once 'psl-config.php';
+include_once 'config.php';
  
 $error_msg = "";
  
@@ -75,8 +75,13 @@ if (isset($_POST['username'], $_POST['email'], $_POST['p'])) {
         // Create salted password 
         $password = hash('sha512', $password . $random_salt);
  
+<<<<<<< HEAD
         // Indsæt ny bruger i databsen
         if ($insert_stmt = $mysqli->prepare("INSERT INTO members (username, email, password, salt) VALUES (?, ?, ?, ?)")) {
+=======
+        // Insert the new user into the database 
+        if ($insert_stmt = $mysqli->prepare("INSERT INTO brugere (brugernavn, email, kode, salt) VALUES (?, ?, ?, ?)")) {
+>>>>>>> a233f327927a9c7a52e4c633f85c488cb421e7b2
             $insert_stmt->bind_param('ssss', $username, $email, $password, $random_salt);
             // Execute query
             if (! $insert_stmt->execute()) {
