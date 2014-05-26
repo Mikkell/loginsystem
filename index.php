@@ -10,26 +10,18 @@ if (login_check($mysqli) == true) {
     $logged = 'out';
 }
 
-include("header.php");
+
 
 if (isset($_GET['error'])) {
-    echo '<p class="error">Error Logging In!</p>';
+    echo '<p class="error">Fejl!</p>';
 }
+include("header.php");
 ?> 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Loginsystem</title>
-</head>
-<body>
+
 <form action="includes/process_login.php" method="post" name="login_form">                      
     Email: <input type="text" name="email" />
-    Password: <input type="kode" 
-                     name="kode" 
-                     id="kode"/>
-    <input type="button" 
-           value="Login" 
-           onclick="formhash(this.form, this.form.kode);" /> 
+    Kode: <input type="kode" name="kode" id="kode"/>
+    <input type="button" value="Login" onclick="formhash(this.form, this.form.kode);" /> 
 </form>
 <p>Hvis du ikke har en bruger,  <a href="register.php">register dig</a></p>
 <p>Hvis du er færdig, <a href="includes/logout.php">log ud</a>.</p>
