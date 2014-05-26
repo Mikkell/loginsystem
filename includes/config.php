@@ -8,6 +8,4 @@ define("DATABASE", "sikkerhed_login");    // Databasenavnet.
 define("CAN_REGISTER", "any");
 define("DEFAULT_ROLE", "member");
 
-define("SECURE", FALSE); //under produktionen.
-
 ?>

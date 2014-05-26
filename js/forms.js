@@ -1,79 +1,75 @@
-function formhash(form, password) {
-    // Create a new element input, this will be our hashed password field. 
+function formhash(form, kode) {
+    // Input til hashet kode.
     var p = document.createElement("input");
  
-    // Add the new element to our form. 
+    // tilføj element til form.
     form.appendChild(p);
     p.name = "p";
     p.type = "hidden";
-    p.value = hex_sha512(password.value);
+    p.value = hex_sha512(kode.value);
  
-    // Make sure the plaintext password doesn't get sent. 
-    password.value = "";
+    kode.value = "";
  
-    // Finally submit the form. 
+    // Send formen.
     form.submit();
 }
  
-function regformhash(form, uid, email, password, conf) {
-     // Check each field has a value
+function regformhash(form, uid, email, kode, conf) {
+     // Tjek om alle felter er udfyldt.
     if (uid.value == ''         || 
           email.value == ''     || 
-          password.value == ''  || 
+          kode.value == ''  || 
           conf.value == '') {
  
-        alert('You must provide all the requested details. Please try again');
+        alert('Du skal udfylde alle felter, før du kan gå videre.');
         return false;
     }
  
-    // Check the username
+    // Tjek brugernavn.
  
     re = /^\w+$/; 
     if(!re.test(form.username.value)) { 
-        alert("Username must contain only letters, numbers and underscores. Please try again"); 
-        form.username.focus();
+        alert('Brugernavn må kun indeholde bogstaver, tal og understregninger. Prøv igen.'); 
+        form.brugernavn.focus();
         return false; 
     }
  
-    // Check that the password is sufficiently long (min 6 chars)
-    // The check is duplicated below, but this is included to give more
-    // specific guidance to the user
-    if (password.value.length < 6) {
-        alert('Passwords must be at least 6 characters long.  Please try again');
-        form.password.focus();
+    // Tjek koden.
+    if (kode.value.length < 6) {
+        alert('Koden skal være mindst 6 cifre. Prøv igen.');
+        form.kode.focus();
         return false;
     }
  
-    // At least one number, one lowercase and one uppercase letter 
-    // At least six characters 
+    // Eftertjek koden.
  
     var re = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/; 
-    if (!re.test(password.value)) {
-        alert('Passwords must contain at least one number, one lowercase and one uppercase letter.  Please try again');
+    if (!re.test(kode.value)) {
+        alert('Koden skal indeholde mindst et tal, et lille bogstav og et stort bogstav. Prøv igen.');
         return false;
     }
  
-    // Check password and confirmation are the same
-    if (password.value != conf.value) {
-        alert('Your password and confirmation do not match. Please try again');
-        form.password.focus();
+    // Tjek at koderne stemmer overens.
+    if (kode.value != conf.value) {
+        alert('Koderne stemmer ikke overens. Prøv igen.');
+        form.kode.focus();
         return false;
     }
  
-    // Create a new element input, this will be our hashed password field. 
+    // Lav nyt input-element til den hashede kode.
     var p = document.createElement("input");
  
-    // Add the new element to our form. 
+    // tilføj det nye element til formen.
     form.appendChild(p);
     p.name = "p";
     p.type = "hidden";
-    p.value = hex_sha512(password.value);
+    p.value = hex_sha512(kode.value);
  
-    // Make sure the plaintext password doesn't get sent. 
-    password.value = "";
+    // Bevar koden i feltet. 
+    kode.value = "";
     conf.value = "";
  
-    // Finally submit the form. 
+    // Send formen.
     form.submit();
     return true;
 }
