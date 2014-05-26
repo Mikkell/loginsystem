@@ -24,7 +24,7 @@ function sec_session_start() {
 	session_regenerate_id();	//regenerer sessionen og sletter den gamle.
 }
 
-function login($email, $password, $mysqli) {
+function login($email, $kode, $mysqli) {
 	// brug af prepared statements for at undgå SQL-injections.
 	if ($stmt = $mysqli->prepare("SELECT id, brugernavn, kode, salt FROM brugere WHERE email = ? LIMIT 1")) {
 		$stmt->bind_param('s', $email); //binder "$email" til parameteret.
@@ -32,11 +32,11 @@ function login($email, $password, $mysqli) {
 		$stmt->store_result();
 
 		// hent variabler fra resultat.
-		$stmt->bind_result($user_id, $username, $db_password, $salt);
+		$stmt->bind_result($user_id, $brugernavn, $db_kode, $salt);
 		$stmt->fetch();
 
 		//hash koden med den unikke salt.
-		$password = hash('sha512', $password . $salt);
+		$kode = hash('sha512', $kode . $salt);
 		if (stmt->num_rows == 1) {
 			//hvis brugeren eksisterer, tjekker vi efter om kontoen er låst pga. for mange forsøg
 
@@ -45,15 +45,15 @@ function login($email, $password, $mysqli) {
 				return false;
 			} else {
 				//tjek om koden i databasen passer med brugerens input.
-				if ($db_password == $kode) {
+				if ($db_kode == $kode) {
 					//koden er korrekt!
 					$user_browser = $_SERVER['HTTP_USER_AGENT'];
 					//XSS beskyttelse.
 					$user_id = preg_replace("/[^0-9]+/", "", $user_id);
 					$_SESSION['bruger_id'] = $bruger_id;
-					$username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
-					$_SESSION['username'] = $username;
-					$_SESSION['login_string'] = hash('sha512', $password . $user_browser);
+					$brugernavn = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $brugernavn);
+					$_SESSION['brugernavn'] = $brugernavn;
+					$_SESSION['login_string'] = hash('sha512', $kode . $user_browser);
 					//login succes.
 					return true;
 				} else {
