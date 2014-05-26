@@ -6,46 +6,45 @@ include_once 'includes/functions.php';
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Secure Login: Registration Form</title>
+        <title>Loginsystem - registreringsform</title>
         <script type="text/JavaScript" src="js/sha512.js"></script> 
         <script type="text/JavaScript" src="js/forms.js"></script>
-        <link rel="stylesheet" href="styles/main.css" />
+        <link rel="stylesheet" href="css/style.css" />
     </head>
     <body>
         <!-- Registrerings formen skal være output hvis POST variablerne ikke er sat
         eller hvis registration script giver en fejl. -->
-        <h1>Register with us</h1>
+        <h1>Registrer bruger</h1>
         <?php
         if (!empty($error_msg)) {
             echo $error_msg;
         }
         ?>
         <ul>
-            <li>Usernames may contain only digits, upper and lower case letters and underscores</li>
-            <li>Emails must have a valid email format</li>
-            <li>Passwords must be at least 6 characters long</li>
-            <li>Passwords must contain
+            <li>Brugernavne må kun indeholde tal, små og store bogstaver og understregninger.</li>
+            <li>Emails skal have det korrekte email format.</li>
+            <li>Koden skal indeholde mindst 6 cifre.</li>
+            <li>Koden skal indeholde:
                 <ul>
-                    <li>At least one upper case letter (A..Z)</li>
-                    <li>At least one lower case letter (a..z)</li>
-                    <li>At least one number (0..9)</li>
+                    <li>Mindst ét stort bogstav (A..Z)</li>
+                    <li>Mindst ét lille bogstav (a..z)</li>
+                    <li>Mindst ét tal (0..9)</li>
                 </ul>
             </li>
-            <li>Your password and confirmation must match exactly</li>
         </ul>
         <form action="<?php echo esc_url($_SERVER['PHP_SELF']); ?>" 
                 method="post" 
                 name="registration_form">
-            Username: <input type='text' 
+            Brugernavn: <input type='text' 
                 name='username' 
-                id='username' /><br>
+                id='brugernavn' /><br>
             Email: <input type="text" name="email" id="email" /><br>
-            Password: <input type="password"
+            Kode: <input type="password"
                              name="password" 
-                             id="password"/><br>
-            Confirm password: <input type="password" 
+                             id="kode"/><br>
+            Gentag kode: <input type="password" 
                                      name="confirmpwd" 
-                                     id="confirmpwd" /><br>
+                                     id="confirmkode" /><br>
             <input type="button" 
                    value="Register" 
                    onclick="return regformhash(this.form,
@@ -54,6 +53,6 @@ include_once 'includes/functions.php';
                                    this.form.password,
                                    this.form.confirmpwd);" /> 
         </form>
-        <p>Return to the <a href="index.php">login page</a>.</p>
+        <p>Tilbage til <a href="index.php">loginsiden</a>.</p>
     </body>
 </html>
