@@ -1,15 +1,32 @@
+<?php
+include_once 'includes/db_connect.php';
+include_once 'includes/functions.php';
+ 
+sec_session_start();
+ 
+if (login_check($mysqli) == true) {
+    $logged = 'in';
+} else {
+    $logged = 'out';
+}
+?>
 <?php include("header.php"); ?>
-
-<form id="login" action="login.php" method="post" accept-charset="utf-8">
-    <fieldset>
-        <legend>Loginform</legend>
-        <input type="hidden" name="submitted" id="submitted" value="1"/>
-        <label for="username">Username:</label>
-        <input type="text" name="username" id="username" maxlength="50"/>
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" maxlength="50"/>
-        <input type="submit" name="Submit" value="Submit"/>
-    </fieldset>
+<?php
+if (isset($_GET['error'])) {
+    echo '<p class="error">Error Logging In!</p>';
+}
+?> 
+<form action="includes/process_login.php" method="post" name="login_form">                      
+    Email: <input type="text" name="email" />
+    Password: <input type="password" 
+                     name="password" 
+                     id="password"/>
+    <input type="button" 
+           value="Login" 
+           onclick="formhash(this.form, this.form.password);" /> 
 </form>
+<p>If you don't have a login, please <a href="register.php">register</a></p>
+<p>If you are done, please <a href="includes/logout.php">log out</a>.</p>
+<p>You are currently logged <?php echo $logged ?>.</p>
 
 <?php include("footer.php"); ?>
