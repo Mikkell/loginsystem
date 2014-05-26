@@ -17,7 +17,7 @@ function sec_session_start() {
 		$cookieParams[path]
 		$cookieParams[domain]
 		$secure
-		$httponly);
+		$httponly);	
 	// sætter sessions navnet efter ovennævnte.
 	session_name ($session_name);
 	session_start();	//starter php sessionen.

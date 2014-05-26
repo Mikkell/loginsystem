@@ -21,7 +21,7 @@ if (isset($_POST['username'], $_POST['email'], $_POST['p'])) {
         $error_msg .= '<p class="error">Invalid password configuration.</p>';
     }
  
-    // Username validering og password validering er blevet checkert clientside
+    // Username validering og password validering er blevet checket clientside
     // Dette bør være tilstrækkelig validering eftersom ingen får noget ud af at snyde her
 
     $prep_stmt = "SELECT id FROM members WHERE email = ? LIMIT 1";
