@@ -12,8 +12,8 @@ include_once 'includes/functions.php';
         <link rel="stylesheet" href="styles/main.css" />
     </head>
     <body>
-        <!-- Registration form to be output if the POST variables are not
-        set or if the registration script caused an error. -->
+        <!-- Registrerings formen skal være output hvis POST variablerne ikke er sat
+        eller hvis registration script giver en fejl. -->
         <h1>Register with us</h1>
         <?php
         if (!empty($error_msg)) {

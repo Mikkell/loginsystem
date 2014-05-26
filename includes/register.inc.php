@@ -5,36 +5,38 @@ include_once 'psl-config.php';
 $error_msg = "";
  
 if (isset($_POST['username'], $_POST['email'], $_POST['p'])) {
-    // Sanitize og valider dataen der bliver sat ind
+    // Sanitize and validate the data passed in
     $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $email = filter_var($email, FILTER_VALIDATE_EMAIL);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        // Hvis email er invalid
+        // Not a valid email
         $error_msg .= '<p class="error">The email address you entered is not valid</p>';
     }
  
     $password = filter_input(INPUT_POST, 'p', FILTER_SANITIZE_STRING);
     if (strlen($password) != 128) {
-        // Hashed password skal være 128 tegn
-        // Hvis ikke er der sket noget mærkeligt
+        // The hashed pwd should be 128 characters long.
+        // If it's not, something really odd has happened
         $error_msg .= '<p class="error">Invalid password configuration.</p>';
     }
  
-    // Username validering og password validering er blevet checkert clientside
-    // Dette bør være tilstrækkelig validering eftersom ingen får noget ud af at snyde her
-
+    // Username validity and password validity have been checked client side.
+    // This should should be adequate as nobody gains any advantage from
+    // breaking these rules.
+    //
+ 
     $prep_stmt = "SELECT id FROM members WHERE email = ? LIMIT 1";
     $stmt = $mysqli->prepare($prep_stmt);
  
-   // check eksisterende emails 
+   // check existing email  
     if ($stmt) {
         $stmt->bind_param('s', $email);
         $stmt->execute();
         $stmt->store_result();
  
         if ($stmt->num_rows == 1) {
-            // En bruger med samme email findes allerede
+            // A user with this email address already exists
             $error_msg .= '<p class="error">A user with this email address already exists.</p>';
                         $stmt->close();
         }
@@ -44,7 +46,7 @@ if (isset($_POST['username'], $_POST['email'], $_POST['p'])) {
                 $stmt->close();
     }
  
-    // check eksisterende usernames
+    // check existing username
     $prep_stmt = "SELECT id FROM members WHERE username = ? LIMIT 1";
     $stmt = $mysqli->prepare($prep_stmt);
  
@@ -54,7 +56,7 @@ if (isset($_POST['username'], $_POST['email'], $_POST['p'])) {
         $stmt->store_result();
  
                 if ($stmt->num_rows == 1) {
-                        // En bruger med samme username findes allerede
+                        // A user with this username already exists
                         $error_msg .= '<p class="error">A user with this username already exists</p>';
                         $stmt->close();
                 }
@@ -65,20 +67,22 @@ if (isset($_POST['username'], $_POST['email'], $_POST['p'])) {
         }
  
     // TODO: 
-    // Vi skal også chekce rettighederne for den bruger som prøver at udføre handlingen
+    // We'll also have to account for the situation where the user doesn't have
+    // rights to do registration, by checking what type of user is attempting to
+    // perform the operation.
  
     if (empty($error_msg)) {
-        //Random salt
-        //$random_salt = hash('sha512', uniqid(openssl_random_pseudo_bytes(16), TRUE)); // Virker ikke
+        // Create a random salt
+        //$random_salt = hash('sha512', uniqid(openssl_random_pseudo_bytes(16), TRUE)); // Did not work
         $random_salt = hash('sha512', uniqid(mt_rand(1, mt_getrandmax()), true));
  
         // Create salted password 
         $password = hash('sha512', $password . $random_salt);
  
-        // Indsæt ny bruger i databsen
+        // Insert the new user into the database 
         if ($insert_stmt = $mysqli->prepare("INSERT INTO members (username, email, password, salt) VALUES (?, ?, ?, ?)")) {
             $insert_stmt->bind_param('ssss', $username, $email, $password, $random_salt);
-            // Execute query
+            // Execute the prepared query.
             if (! $insert_stmt->execute()) {
                 header('Location: ../error.php?err=Registration failure: INSERT');
             }
