@@ -100,7 +100,7 @@ function login_check($mysqli) {
 		$login_string = $_SESSION['login_string'];
 		$brugernavn = $_SESSION['brugernavn'];
 
-		//Hent bruger-id fra brugeren.
+		//Hent bruger_id fra brugeren.
 		$user_browser = $_SERVER['HTTP_USER_AGENT'];
 
 		if ($stmt = $mysqli->prepare("SELECT kode FROM brugere WHERE id = ? LIMIT 1")) {
